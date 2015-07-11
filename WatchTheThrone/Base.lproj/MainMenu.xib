@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
+            <connections>
+                <outlet property="delegate" destination="Voe-Tx-rLC" id="GzC-gU-4Uq"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="WatchTheThrone" customModuleProvider="target">
+            <connections>
+                <outlet property="menu" destination="vnw-HP-3EF" id="Q1S-zQ-gKP"/>
+                <outlet property="notificationMenuItem" destination="gHc-2D-brn" id="bEZ-e3-Do7"/>
+            </connections>
+        </customObject>
+        <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
+        <menu autoenablesItems="NO" id="vnw-HP-3EF">
+            <items>
+                <menuItem title="Notify Me" enabled="NO" id="gHc-2D-brn">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="notifyMe:" target="Voe-Tx-rLC" id="4Ts-Vp-T0b"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="8Z1-GO-ifM"/>
+                <menuItem title="Quit" keyEquivalent="q" id="ZvZ-ub-6JS">
+                    <connections>
+                        <action selector="terminate:" target="-1" id="u9I-xU-mqS"/>
+                    </connections>
+                </menuItem>
+            </items>
+        </menu>
+    </objects>
+</document>
