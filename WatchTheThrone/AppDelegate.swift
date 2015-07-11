@@ -28,19 +28,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, CocoaMQTTDelegate {
         didSet {
             switch throneState {
             case .Unknown:
-                println("State changed to Unknown")
                 statusItem.title = "📡"
                 if notificationMenuItem.state == NSOffState {
                     notificationMenuItem.enabled = false
                 }
             case .Vacant:
-                println("State changed to Vacant")
                 statusItem.title = "🚽"
                 if notificationMenuItem.state == NSOffState {
                     notificationMenuItem.enabled = false
                 }
             case .Occupied:
-                println("State changed to Occupied")
                 statusItem.title = "💩"
                 notificationMenuItem.enabled = true
             }
