@@ -23,22 +23,26 @@ class AppDelegate: NSObject, NSApplicationDelegate, CocoaMQTTDelegate {
     @IBOutlet weak var notificationMenuItem: NSMenuItem!
 
     var notificationTimer: NSTimer?
+    
+    let vacantImage: NSImage? = NSImage(named: "vacant")
+    let occupiedImage: NSImage? = NSImage(named: "occupied")
 
     var throneState = ThroneOccupiedState.Unknown {
         didSet {
             switch throneState {
             case .Unknown:
-                statusItem.title = "📡"
+                statusItem.button?.image = vacantImage
+                statusItem.button?.appearsDisabled = true
                 if notificationMenuItem.state == NSOffState {
                     notificationMenuItem.enabled = false
                 }
             case .Vacant:
-                statusItem.title = "🚽"
+                statusItem.button?.image = vacantImage
                 if notificationMenuItem.state == NSOffState {
                     notificationMenuItem.enabled = false
                 }
             case .Occupied:
-                statusItem.title = "💩"
+                statusItem.button?.image = occupiedImage
                 notificationMenuItem.enabled = true
             }
         }
@@ -46,7 +50,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, CocoaMQTTDelegate {
 
     lazy var statusItem: NSStatusItem = {
         let statusItem = NSStatusBar.systemStatusBar().statusItemWithLength(-2)
-        statusItem.title = "📡"
+        statusItem.button?.image = self.vacantImage
+        statusItem.button?.appearsDisabled = true
         return statusItem
     }()
 
@@ -61,6 +66,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, CocoaMQTTDelegate {
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         statusItem.menu = menu
         mqttClient.connect()
+        vacantImage?.setTemplate(true)
+        occupiedImage?.setTemplate(true)
     }
 
     @IBAction func notifyMe(sender: NSMenuItem) {
@@ -99,7 +106,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, CocoaMQTTDelegate {
     }
 
     func mqttDidDisconnect(mqtt: CocoaMQTT, withError err: NSError) {
-        statusItem.title = "📡"
+        statusItem.button?.appearsDisabled = true
     }
 
     func mqttDidPing(mqtt: CocoaMQTT) {
@@ -112,6 +119,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, CocoaMQTTDelegate {
 
     func mqtt(mqtt: CocoaMQTT, didReceiveMessage message: CocoaMQTTMessage, id: UInt16) {
         if let string = message.string {
+            statusItem.button?.appearsDisabled = false
             if string.hasSuffix("lse") {
                 if throneState == .Occupied {
                     if notificationTimer == nil {
