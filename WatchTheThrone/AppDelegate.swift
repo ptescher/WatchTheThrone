@@ -22,7 +22,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, CocoaMQTTDelegate {
 
     @IBOutlet weak var notificationMenuItem: NSMenuItem!
 
-    var notificationTimer: NSTimer?
+    weak var notificationTimer: NSTimer?
     
     let vacantImage: NSImage? = NSImage(named: "vacant")
     let occupiedImage: NSImage? = NSImage(named: "occupied")
@@ -138,7 +138,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, CocoaMQTTDelegate {
     }
 
     func vacantTimerFired(timer: NSTimer) {
-        notificationTimer = nil
         throneState = .Vacant
         if notificationMenuItem.state == NSOnState {
             notificationMenuItem.state = NSOffState
