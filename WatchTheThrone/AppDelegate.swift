@@ -27,6 +27,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, CocoaMQTTDelegate {
     
     let vacantImage: NSImage? = NSImage(named: "vacant")
     let occupiedImage: NSImage? = NSImage(named: "occupied")
+    
+    var connectTimer: MSWeakTimer?
 
     var throneState = ThroneOccupiedState.Unknown {
         didSet {
@@ -61,13 +63,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, CocoaMQTTDelegate {
         mqttClient.delegate = self
         mqttClient.username = "macosx"
         mqttClient.password = "blahblahblah"
+        mqttClient.keepAlive = 10
         return mqttClient
     }()
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         Fabric.with([Crashlytics()])
         statusItem.menu = menu
-        mqttClient.connect()
+        self.connect()
         vacantImage?.setTemplate(true)
         occupiedImage?.setTemplate(true)
     }
@@ -78,6 +81,28 @@ class AppDelegate: NSObject, NSApplicationDelegate, CocoaMQTTDelegate {
                 sender.state = NSOnState
             default:
                 sender.state = NSOffState
+        }
+    }
+    
+    func connect() {
+        if (connectTimer == nil) {
+            connectTimer = MSWeakTimer.scheduledTimerWithTimeInterval(
+                NSTimeInterval(10),
+                target: self,
+                selector: "_connectTimerFired",
+                userInfo: nil,
+                repeats: true,
+                dispatchQueue: dispatch_get_main_queue())
+            connectTimer!.fire()
+        }
+    }
+    
+    func _connectTimerFired() {
+        if (mqttClient.connState == .CONNECTED) {
+            connectTimer?.invalidate()
+            connectTimer = nil
+        } else {
+            mqttClient.connect()
         }
     }
 
@@ -100,15 +125,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, CocoaMQTTDelegate {
     }
 
     func mqtt(mqtt: CocoaMQTT, didSubscribeTopic topic: String) {
-
+        statusItem.button?.appearsDisabled = false
     }
 
     func mqtt(mqtt: CocoaMQTT, didUnsubscribeTopic topic: String) {
-
+        statusItem.button?.appearsDisabled = true
+        mqtt.subscribe("test", qos: CocoaMQTTQOS.QOS0)
     }
 
     func mqttDidDisconnect(mqtt: CocoaMQTT, withError err: NSError) {
         statusItem.button?.appearsDisabled = true
+        self.connect()
     }
 
     func mqttDidPing(mqtt: CocoaMQTT) {
