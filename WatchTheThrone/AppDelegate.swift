@@ -24,11 +24,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, CocoaMQTTDelegate {
     @IBOutlet weak var notificationMenuItem: NSMenuItem!
 
     weak var notificationTimer: NSTimer?
+    weak var reconnectionTimer: NSTimer?
     
     let vacantImage: NSImage? = NSImage(named: "vacant")
     let occupiedImage: NSImage? = NSImage(named: "occupied")
-    
-    var connectTimer: MSWeakTimer?
 
     var throneState = ThroneOccupiedState.Unknown {
         didSet {
@@ -63,14 +62,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, CocoaMQTTDelegate {
         mqttClient.delegate = self
         mqttClient.username = "macosx"
         mqttClient.password = "blahblahblah"
-        mqttClient.keepAlive = 10
+        mqttClient.keepAlive = 30
         return mqttClient
     }()
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         Fabric.with([Crashlytics()])
         statusItem.menu = menu
-        self.connect()
+        statusItem.button?.appearsDisabled = true
+        mqttClient.connect()
         vacantImage?.setTemplate(true)
         occupiedImage?.setTemplate(true)
     }
@@ -83,28 +83,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, CocoaMQTTDelegate {
                 sender.state = NSOffState
         }
     }
-    
-    func connect() {
-        if (connectTimer == nil) {
-            connectTimer = MSWeakTimer.scheduledTimerWithTimeInterval(
-                NSTimeInterval(10),
-                target: self,
-                selector: "_connectTimerFired",
-                userInfo: nil,
-                repeats: true,
-                dispatchQueue: dispatch_get_main_queue())
-            connectTimer!.fire()
-        }
-    }
-    
-    func _connectTimerFired() {
-        if (mqttClient.connState == .CONNECTED) {
-            connectTimer?.invalidate()
-            connectTimer = nil
-        } else {
-            mqttClient.connect()
-        }
-    }
 
     func applicationWillTerminate(aNotification: NSNotification) {
         // Insert code here to tear down your application
@@ -113,7 +91,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, CocoaMQTTDelegate {
     // MARK: - CocoaMQTTDelegate
 
     func mqtt(mqtt: CocoaMQTT, didConnect host: String, port: Int) {
-
+        reconnectionTimer?.invalidate()
+        statusItem.button?.appearsDisabled = false
     }
 
     func mqtt(mqtt: CocoaMQTT, didConnectAck ack: CocoaMQTTConnAck) {
@@ -125,17 +104,21 @@ class AppDelegate: NSObject, NSApplicationDelegate, CocoaMQTTDelegate {
     }
 
     func mqtt(mqtt: CocoaMQTT, didSubscribeTopic topic: String) {
-        statusItem.button?.appearsDisabled = false
     }
 
     func mqtt(mqtt: CocoaMQTT, didUnsubscribeTopic topic: String) {
-        statusItem.button?.appearsDisabled = true
-        mqtt.subscribe("test", qos: CocoaMQTTQOS.QOS0)
     }
 
     func mqttDidDisconnect(mqtt: CocoaMQTT, withError err: NSError) {
         statusItem.button?.appearsDisabled = true
-        self.connect()
+        if reconnectionTimer == nil {
+            reconnectionTimer = NSTimer.scheduledTimerWithTimeInterval(10, target: self, selector: "reconnect:", userInfo: nil, repeats: true)
+            reconnectionTimer?.fire()
+        }
+    }
+
+    func reconnect(timer: NSTimer?) {
+        mqttClient.connect()
     }
 
     func mqttDidPing(mqtt: CocoaMQTT) {
