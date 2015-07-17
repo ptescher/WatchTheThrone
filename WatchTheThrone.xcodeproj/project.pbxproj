@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		C6905C728263C71D533E0021 /* libPods-WatchTheThrone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73FD2C58A0DF4C81E0FCED4D /* libPods-WatchTheThrone.a */; };
+		CE13EFC91B545F1F00CF89A4 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE13EFC71B545F1F00CF89A4 /* Fabric.framework */; };
+		CE13EFCA1B545F1F00CF89A4 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE13EFC81B545F1F00CF89A4 /* Crashlytics.framework */; };
 		CEA6692C1B507C5A00C37BDC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA6692B1B507C5A00C37BDC /* AppDelegate.swift */; };
 		CEA6692E1B507C5A00C37BDC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEA6692D1B507C5A00C37BDC /* Images.xcassets */; };
 		CEA669311B507C5A00C37BDC /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEA6692F1B507C5A00C37BDC /* MainMenu.xib */; };
@@ -30,6 +32,8 @@
 /* Begin PBXFileReference section */
 		73FD2C58A0DF4C81E0FCED4D /* libPods-WatchTheThrone.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WatchTheThrone.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		76F5C8E13086BE5B854826BB /* Pods-WatchTheThrone.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WatchTheThrone.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WatchTheThrone/Pods-WatchTheThrone.debug.xcconfig"; sourceTree = "<group>"; };
+		CE13EFC71B545F1F00CF89A4 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		CE13EFC81B545F1F00CF89A4 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		CEA669261B507C5A00C37BDC /* WatchTheThrone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchTheThrone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEA6692A1B507C5A00C37BDC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CEA6692B1B507C5A00C37BDC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -51,6 +55,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C6905C728263C71D533E0021 /* libPods-WatchTheThrone.a in Frameworks */,
+				CE13EFCA1B545F1F00CF89A4 /* Crashlytics.framework in Frameworks */,
+				CE13EFC91B545F1F00CF89A4 /* Fabric.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -67,6 +73,8 @@
 		1CB3CCFD200FE7C5F7E9929D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CE13EFC71B545F1F00CF89A4 /* Fabric.framework */,
+				CE13EFC81B545F1F00CF89A4 /* Crashlytics.framework */,
 				73FD2C58A0DF4C81E0FCED4D /* libPods-WatchTheThrone.a */,
 			);
 			name = Frameworks;
@@ -161,6 +169,7 @@
 				CEA669231B507C5A00C37BDC /* Frameworks */,
 				CEA669241B507C5A00C37BDC /* Resources */,
 				126C32DF3A3BBA98ACB5A090 /* Copy Pods Resources */,
+				CE13EFC61B545ED100CF89A4 /* Fabric */,
 			);
 			buildRules = (
 			);
@@ -276,6 +285,20 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
+		CE13EFC61B545ED100CF89A4 /* Fabric */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = Fabric;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run 6a885ef5c37bc73a297475570916f87bb9f5e9b1 7242bd329b720941e0db88669823b4b0a6b51dd157b4762f82c282219796ff11";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -339,7 +362,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -407,6 +430,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = WatchTheThrone/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -422,6 +449,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = WatchTheThrone/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";

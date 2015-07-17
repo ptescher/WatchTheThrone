@@ -7,7 +7,8 @@
 //
 
 import Cocoa
-
+import Fabric
+import Crashlytics
 
 enum ThroneOccupiedState {
     case Unknown
@@ -64,6 +65,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, CocoaMQTTDelegate {
     }()
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
+        Fabric.with([Crashlytics()])
         statusItem.menu = menu
         mqttClient.connect()
         vacantImage?.setTemplate(true)
